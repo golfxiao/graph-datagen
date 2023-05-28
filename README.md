@@ -15,41 +15,41 @@ The purpose of this project is to automatically generate test datasets for graph
 
 ## Rule Configuration
 The config.yaml file contains two main sections:
-* clientSettings: runtime configuration, including the number of concurrent threads, task cache queue size, and target language for generating data;
-* graph: the structure of the graph's nodes and edges, the size of each node/edge generated, and the generation method for each field attribute.
+* **clientSettings**: runtime configuration, including the number of concurrent threads, task cache queue size, and target language for generating data;
+* **graph**: the structure of the graph's nodes and edges, the size of each node/edge generated, and the generation method for each field attribute.
 
 ### I. Graph Structure Configuration
 Each node in the graph represents a point or an edge in the graph database, and each node has two parts of configuration:
-- schema: node structure, generation quantity, and generation rule configuration
-- output: output configuration for node data, currently only supporting the csv format
+- **schema**: node structure, generation quantity, and generation rule configuration
+- **output**: output configuration for node data, currently only supporting the csv format
 
 The schema consists of three parts:
-1. Node structure: the same as the node configuration definition of the open-source Nebula Importer tool, which can be directly referenced at: [Nebula Importer Schema Configuration](https://docs.nebula-graph.com.cn/3.3.0/nebula-importer/use-importer/#schema)
-2. Generation quantity: there are differences in the configuration of points and edges:
-   - vertex: the genNum parameter is extended for each point to indicate the total number of nodes to be generated for this node;
-   - edge: a predefined attribute genNumPerVID is extended for each edge to configure the number of edges of the same type but different dstVID to be generated for each srcVID. This configuration is to make the number of edges closer to the business scenario, as edges reflect the business connections between a point and other points.
-3. Generation rules: a genrule is extended on each attribute to indicate the generation rule for this attribute. The details will be introduced below.
+1. **Node structure**: the same as the node configuration definition of the open-source Nebula Importer tool, which can be directly referenced at: [Nebula Importer Schema Configuration](https://docs.nebula-graph.com.cn/3.3.0/nebula-importer/use-importer/#schema)
+2. **Generation quantity**: there are differences in the configuration of points and edges:
+   - **vertex**: the genNum parameter is extended for each point to indicate the total number of nodes to be generated for this node;
+   - **edge**: a predefined attribute genNumPerVID is extended for each edge to configure the number of edges of the same type but different dstVID to be generated for each srcVID. This configuration is to make the number of edges closer to the business scenario, as edges reflect the business connections between a point and other points.
+3. **Generation rules**: a genrule is extended on each attribute to indicate the generation rule for this attribute. The details will be introduced below.
 
 ### II. Generation Rule Configuration
 The genrule accepts a dictionary structure configuration, and the configured fields are mainly divided into two parts:
-- generator: the selected generator, which is essentially a method name for generating the quantity, and calling the method can generate the corresponding type of quantity.
-- Generator parameters: all parameters except generator are considered generator parameters and will be passed as named parameters to the generator.
+- **generator**: the selected generator, which is essentially a method name for generating the quantity, and calling the method can generate the corresponding type of quantity.
+- **Generator parameters**: all parameters except generator are considered generator parameters and will be passed as named parameters to the generator.
 
 Currently, the supported generators are divided into two categories:
-1. Faker built-in generators. It is agreed in the project that the faker method name is the generator name, and the method parameters are the generator parameters, which are uniformly configured as named parameters. For example:
-   - random_int: generates a random integer within a specified range, accepts min and max parameters to indicate the range of numbers to be generated.
-   - random_number: generates a string of specified length, accepts digits to indicate the length of the number to be generated.
-   - random_element: randomly returns an element within a specified list range, accepts elements (tuple type) to indicate the optional list.
-   - name: generates a person's name, for example: Zhang San.
-   - sentence: generates a sentence of specified length, for example: How to generate data automatically.
-   - company: generates a company name, for example: HeLian Electronic Information Co., Ltd.
+1. **Faker built-in generators**. It is agreed in the project that the faker method name is the generator name, and the method parameters are the generator parameters, which are uniformly configured as named parameters. For example:
+   - **random_int**: generates a random integer within a specified range, accepts min and max parameters to indicate the range of numbers to be generated.
+   - **random_number**: generates a string of specified length, accepts digits to indicate the length of the number to be generated.
+   - **random_element**: randomly returns an element within a specified list range, accepts elements (tuple type) to indicate the optional list.
+   - **name**: generates a person's name, for example: Zhang San.
+   - **sentence**: generates a sentence of specified length, for example: How to generate data automatically.
+   - **company**: generates a company name, for example: HeLian Electronic Information Co., Ltd.
    - ...
-2. Custom generators: custom generators based on graph structure requirements. Currently, there are several types:
-   - id: an ID incremental sequence, corresponding to the unique identifier (integer) of data in daily business development. It can be combined with prefix to generate a unique identifier of str type.
-   - const: a constant value, which can be an integer or a string, for example: 4, "E".
-   - reference: a reference variable, for example: a_{user_id}, this variable must be in the same schema.
-   - eval: a calculated expression, for example: start_time+duration.
-   - oftag: takes the point ID from an existing tag, only applicable to the scenario of generating srcVID and dstVID of edges, and the srcVID and dstVID of edges must exist in the points.
+2. **Custom generators**: custom generators based on graph structure requirements. Currently, there are several types:
+   - **id**: an ID incremental sequence, corresponding to the unique identifier (integer) of data in daily business development. It can be combined with prefix to generate a unique identifier of str type.
+   - **const**: a constant value, which can be an integer or a string, for example: 4, "E".
+   - **reference**: a reference variable, for example: a_{user_id}, this variable must be in the same schema.
+   - **eval**: a calculated expression, for example: start_time+duration.
+   - **oftag**: takes the point ID from an existing tag, only applicable to the scenario of generating srcVID and dstVID of edges, and the srcVID and dstVID of edges must exist in the points.
 
 Faker is an open-source data mocking project, and only a small part of the built-in generators are listed above. For more generators, please refer to the documentation：[faker.providers](https://faker.readthedocs.io/en/master/providers/baseprovider.html)
 
