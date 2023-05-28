@@ -1,0 +1,5 @@
+.DS_Store
+virtualenv/
+.vscode/
+target/
+.pytest_cache/

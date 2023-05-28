@@ -1,0 +1,13 @@
+version: v1.0
+description: nebula data generation
+log:
+  path: ./target/log/datagen.log
+  level: debug
+clientSettings:
+  numWorkers: 1         # Number of concurrency threads
+  queueSize: 5          # The queue size of storage task
+  locale: zh-CN         # Generate language, mock different data according to different language environments
+graph:                  # TODO Config graph structure and data generation rules, Refer to an example in the examples directory
+  
+
+    

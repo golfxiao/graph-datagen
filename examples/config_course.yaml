@@ -1,0 +1,154 @@
+version: v1.0
+description: nebula data generation
+log:
+  path: ./target/log/datagen.log
+  level: debug
+clientSettings:
+  numWorkers: 1         # Number of concurrency threads
+  queueSize: 5          # The queue size of storage task
+  locale: zh-CN         # Generate language, mock different data according to different language environments
+graph:
+  - output:
+      type: csv
+      path: ./target/data/student.csv
+      batchSize: 5000
+      csv:
+        withHeader: true
+    schema:
+      type: vertex
+      genNum: 2000
+      vertex:
+        vid:
+          type: string
+          genrule: 
+            generator: id
+            prefix: student_
+            start: 10000
+        tags:
+          - name: student
+            props:
+              - name: name
+                type: string
+                genrule: 
+                  generator: name
+              - name: age
+                type: int
+                genrule: 
+                  generator: random_int
+                  min: 15
+                  max: 30
+              - name: gender
+                type: string
+                genrule: 
+                  generator: random_element
+                  elements: ('male', 'female')
+  - output:
+      type: csv
+      path: ./target/data/course.csv
+      batchSize: 5000
+      csv:
+        withHeader: true
+    schema:
+      type: vertex
+      genNum: 100
+      vertex:
+        vid:
+          type: string
+          genrule: 
+            generator: id
+            start: 1000
+            prefix: course_
+        tags:
+          - name: course
+            props:
+              - name: name
+                type: string
+                genrule: 
+                  generator: sentence
+                  nb_words: 5
+              - name: credits
+                type: int
+                genrule: 
+                  generator: random_int
+                  min: 1
+                  max: 6
+          - name: building
+            props:
+              - name: name
+                type: string
+                genrule: 
+                  generator: random_element
+                  elements: ('经管学院','计算机学院','电气学院','建筑学院', '测绘', '土木学院', '采矿学院')
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/follow.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: follow
+        withRanking: true
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int
+            min: 1
+            max: 20
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: student  
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: course
+        rank:
+          type: int
+          genrule: 
+            generator: date_time
+        props:
+          - name: likeness
+            type: float
+            genrule: 
+              generator: pydecimal     
+              min_value: 0.0
+              max_value: 1.0
+              right_digits: 2
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/choose.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: choose
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int
+            min: 1
+            max: 5
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: student
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: building
+        props:
+          - name: grade
+            type: int
+            genrule: 
+              generator: random_int
+              min: 1
+              max: 10

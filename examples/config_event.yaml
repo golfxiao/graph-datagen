@@ -1,0 +1,535 @@
+version: v1.0
+description: nebula data generation
+log:
+  path: ./target/log/datagen.log
+  level: info
+clientSettings:
+  numWorkers: 1         # Number of concurrency threads
+  queueSize: 5          # The queue size of storage task
+  locale: zh-CN         # Generate language, mock different data according to different language environments
+graph:
+  - output:
+      type: csv
+      path: ./target/data/user.csv
+      batchSize: 5000
+      csv:
+        withHeader: true
+    schema:
+      type: vertex
+      genNum: 2000
+      vertex:
+        vid:
+          type: string
+          genrule: 
+            generator: reference
+            pattern: u_{user_id}
+        tags:
+          - name: user
+            props:
+              - name: user_id
+                type: int
+                genrule: 
+                  generator: id
+                  start: 10000000
+              - name: name
+                type: string
+                genrule: 
+                  generator: name
+              - name: industry_id
+                type: int
+                genrule: 
+                  generator: random_number
+                  digits: 6
+              - name: industry_role_id
+                type: int
+                genrule: 
+                  generator: random_number
+                  digits: 5
+  - output:
+      type: csv
+      path: ./target/data/audience.csv
+      batchSize: 5000
+      csv:
+        withHeader: true
+    schema:
+      type: vertex
+      genNum: 10000
+      vertex:
+        vid:
+          type: string
+          genrule: 
+            generator: reference
+            pattern: a_{user_id}
+        tags:
+          - name: audience
+            props:
+              - name: user_id
+                type: int
+                genrule: 
+                  generator: id
+                  start: 10000000
+              - name: name
+                type: string
+                genrule: 
+                  generator: name
+  - output:
+      type: csv
+      path: ./target/data/event.csv
+      batchSize: 5000
+      csv:
+        withHeader: true
+    schema:
+      type: vertex
+      genNum: 10000
+      vertex:
+        vid:
+          type: string
+          genrule: 
+            generator: reference
+            pattern: e_{event_id}
+        tags:
+          - name: event
+            props:
+              - name: event_id
+                type: int
+                genrule: 
+                  generator: id
+                  start: 10000000
+              - name: title
+                type: string
+                genrule: 
+                  generator: sentence
+                  nb_words: 10
+              - name: host_id
+                type: int
+                genrule: 
+                  generator: random_number
+                  digits: 8
+              - name: start_time          # unit: second
+                type: int
+                genrule: 
+                  generator: random_int   
+                  min: 1650927309
+                  max: 1714085709
+              - name: duration            # unit: second
+                type: int
+                genrule: 
+                  generator: random_int    
+                  min: 1800
+                  max: 28800
+              - name: end_time
+                type: int
+                genrule: 
+                  generator: eval
+                  expr: start_time+duration
+              - name: industry_id
+                type: int
+                genrule: 
+                  generator: random_number
+                  digits: 6
+              - name: activity_form
+                type: int
+                genrule: 
+                  generator: random_number
+                  digits: 4
+              - name: scan_times
+                type: int
+                genrule: 
+                  generator: random_int   
+                  min: 0
+                  max: 10000
+              - name: scan_number
+                type: int
+                genrule: 
+                  generator: random_int   
+                  min: 0
+                  max: 1000
+              - name: view_duration
+                type: int
+                genrule: 
+                  generator: random_int   
+                  min: 0
+                  max: 100000
+              - name: view_number
+                type: int
+                genrule: 
+                  generator: random_int   
+                  min: 0
+                  max: 1000
+              - name: score
+                type: int
+                genrule: 
+                  generator: random_int   
+                  min: 0
+                  max: 10000
+              - name: customer_code
+                type: string
+                genrule: 
+                  generator: random_number
+                  digits: 6
+              - name: app_source
+                type: string
+                genrule: 
+                  generator: const
+                  val: 'cloudlive'
+              - name: cal_type
+                type: string
+                genrule: 
+                  generator: random_element
+                  elements: ('E','R','FC','FB')
+              - name: parent_id
+                type: int
+                genrule: 
+                  generator: random_number
+                  digits: 8
+              - name: has_record
+                type: int
+                genrule: 
+                  generator: random_element
+                  elements: (0,1)
+              - name: record_expiration_time
+                type: int
+                genrule: 
+                  generator: random_int   
+                  min: 1650927309
+                  max: 1714085709
+              - name: join_limits
+                type: string
+                genrule: 
+                  generator: random_int   
+                  min: 0
+                  max: 8
+  - output:
+      type: csv
+      path: ./target/data/topic.csv
+      batchSize: 5000
+      csv:
+        withHeader: true
+    schema:
+      type: vertex
+      genNum: 10000
+      vertex:
+        vid:
+          type: string
+          genrule: 
+            generator: reference
+            pattern: t_{ts_code}
+        tags:
+          - name: topic
+            props:
+              - name: ts_code
+                type: string
+                genrule: 
+                  generator: id
+                  start: 100000
+              - name: name
+                type: string
+                genrule: 
+                  generator: company
+  - output:
+      type: csv
+      path: ./target/data/field.csv
+      batchSize: 5000
+      csv:
+        withHeader: true
+    schema:
+      type: vertex
+      genNum: 100
+      vertex:
+        vid:
+          type: string
+          genrule: 
+            generator: reference
+            pattern: f_{field_id}
+        tags:
+          - name: field
+            props:
+              - name: field_id
+                type: int
+                genrule: 
+                  generator: id
+                  start: 1000
+              - name: industry_id
+                type: int
+                genrule: 
+                  generator: const
+                  val: 1001
+              - name: title
+                type: string
+                genrule: 
+                  generator: sentence
+                  nb_words: 4
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/follow_field.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: follow_field
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int   
+            min: 1
+            max: 5
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: audience
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: user
+        props:
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/follow_topic.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: follow_topic
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int   
+            min: 0
+            max: 30
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: audience
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: topic
+        props:
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/follow_user.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: follow_user
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int   
+            min: 0
+            max: 30
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: audience
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: user
+        props:
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/add_calendar.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: add_calendar
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int   
+            min: 0
+            max: 200
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: audience
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: event
+        props:
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/view.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: view
+        withRanking: true
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int   
+            min: 0
+            max: 200
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: audience
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: event
+        rank:
+          type: int
+          genrule: 
+            generator: eval
+            expr: online_time
+        props:
+          - name: online_time
+            type: int
+            genrule: 
+              generator: random_int   
+              min: 1650927309
+              max: 1714085709
+          - name: live_type
+            type: int
+            genrule: 
+              generator: random_element
+              elements: (0,1)
+          - name: duration
+            type: int
+            genrule: 
+              generator: random_int   
+              min: 0
+              max: 10800
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/host.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: host
+        withRanking: false
+        genNumPerVID:    
+          type: dstVID
+          genrule: 
+            generator: const
+            val: 1
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: user
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: event
+        props:
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/research.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: research
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int   
+            min: 0
+            max: 3
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: user
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: field
+        props:
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/discuss.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: discuss
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: random_int   
+            min: 0
+            max: 1
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: event
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: topic
+        props:
+  - output:
+      type: csv
+      batchSize: 5000
+      path: ./target/data/related.csv
+      csv:
+        withHeader: true
+    schema:
+      type: edge
+      edge:
+        name: related
+        withRanking: false
+        genNumPerVID:
+          type: srcVID
+          genrule: 
+            generator: const
+            val: 1
+        srcVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: event
+        dstVID:
+          type: string
+          genrule: 
+            generator: oftag
+            tag: field
+        props:
+
+    
