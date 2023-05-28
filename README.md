@@ -54,7 +54,7 @@ Currently, the supported generators are divided into two categories:
 Faker is an open-source data mocking project, and only a small part of the built-in generators are listed above. For more generators, please refer to the documentation：[faker.providers](https://faker.readthedocs.io/en/master/providers/baseprovider.html)
 
 ## Running the Script
-Run in the terminal: ./datagen/main.py --config config.yaml
+Run in the terminal: ./main.py --config config.yaml
 
 ## Quick Practice
 **Example**: Two configuration file examples for different scenarios are available in the examples directory of the project, which can be run directly:
