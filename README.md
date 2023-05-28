@@ -8,6 +8,8 @@ The purpose of this project is to automatically generate test datasets for graph
 
 [CN](README_cn.md)
 
+**Usage**: First, manually configure the schema structure of the graph space in the YAML file, and then run the main.py script to generate a CSV format test data set in the specified directory. This data set is generated according to the format required by the nebula-importer tool and can be directly imported into nebula-graph using the nebula-importer tool.
+
 ## Environment Preparation
 * Runtime environment: Python 3.8+
 * Install project dependencies: pip install -r requirements.txt
