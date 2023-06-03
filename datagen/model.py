@@ -29,7 +29,7 @@ class PropConfig:
     name: str  # Property name，pattern: [tag].[prop_name]
     type: str  # Property value，such as int, string
     rule: str  # Generation rules, such as range
-    rule_args: dict  # the parameters required by the rules, uniformly convert it to the tuplet
+    rule_args: dict  # the parameters required by the rules
 
 
 @dataclass

@@ -21,7 +21,7 @@ class Provider(BaseProvider):
         super().__init__(*args)
         self._offsets: Dict[str, int] = {}
 
-    def id(self, tag: str = "default", start=0, max=None, prefix=None) -> int:
+    def id(self, tag: str = "default", start=0, max=None, prefix=None):
         if tag not in self._offsets:
             self._offsets[tag] = 0
 

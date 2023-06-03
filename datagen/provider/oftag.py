@@ -56,11 +56,8 @@ class Provider(BaseProvider):
         elif prop.rule == GENERATOR_ID:
             return self.__vid_from_id(prop, mode, node.schema.gen_num)
 
-    def __vid_from_reference(
-        self, node: NodeConfig, prop: PropConfig, mode: int
-    ) -> int:
+    def __vid_from_reference(self, node: NodeConfig, prop: PropConfig, mode: int):
         holders = utils.extract_placeholder(prop.rule_args["pattern"])
-        # holders = utils.extract_placeholder(prop.rule_args[0])
         if len(holders) == 0:
             raise Exception(
                 f"Unexpected placeholders empty of reference rule for key: {node.nkey}."
@@ -79,14 +76,15 @@ class Provider(BaseProvider):
             prop.rule_args["pattern"], **{holders[0]: id}
         )
 
-    def __vid_from_id(self, prop: PropConfig, mode: int, gen_num: int) -> int:
-        # min = int(prop.rule_args[0])
+    def __vid_from_id(self, prop: PropConfig, mode: int, gen_num: int):
+        prefix = prop.rule_args.get("prefix")
         min = int(prop.rule_args["start"])
         max = min + gen_num
         if mode == ID_MODE_RANDOM:
-            return self.fake.random_int(min=min, max=max)
+            id = self.fake.random_int(min=min, max=max)
         else:
-            return self.seq_provider.id(tag=prop.name, start=min, max=max)
+            id = self.seq_provider.id(tag=prop.name, start=min, max=max)
+        return f"{prefix}{id}" if prefix else id
 
     def _reset(self):
         self.seq_provider._reset()
