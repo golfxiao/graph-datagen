@@ -55,10 +55,10 @@ genrule接受的是一个字典结构配置，配置的字段主要分为两部�
 
 faker是一个开源的数据mock项目，上面faker自带生成器只列了很小一部分，更多生成器参考：[faker.providers](https://faker.readthedocs.io/en/master/providers/baseprovider.html)
 
- ## 运行脚本
+## 运行脚本
  终端运行： ./main.py --config config.yaml
 
- ## 实践记录
+## 实践记录
 **示例**：项目的examples目录下两个场景的配置文件示例可供参考，可以直接运行：
  - config_course.yaml: 学生选课业务
  - config_event.yaml: 活动推荐业务
@@ -68,3 +68,12 @@ faker是一个开源的数据mock项目，上面faker自带生成器只列了很
 **关于多线程并发**：项目配置文件中虽然支持num_workers配置工作线程数，不过经过实践，python中并发多线程对于加快运行效率作用不太明显，原因后来才得知是python中有全局解释器锁（GIL）的限制，多线程并不能利用多核心； 
 
 **关于设计思路**，请参考：https://blog.csdn.net/xiaojia1001/article/details/131027997
+
+## 反馈
+最后，感谢您阅读这个教程。如果您觉得对您有所帮助，可以考虑请我喝杯咖啡作为鼓励😊
+
+![a cup of tea](./docs/img/cup_of_tea.jpg)
+
+如果您在使用本项目的过程中发现BUG或者有新的功能需求，请发邮件至golfxiao@163.com与作者取得联系，或者添加作者微信：
+
+<img src="./docs/img/weixin_pic.jpg" width="20%" height="20%"/>
